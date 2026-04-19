@@ -23,7 +23,7 @@ pipeline {
 
                     docker.withRegistry('', 'dockerhub') {
                         image.push("${env.BUILD_NUMBER}")
-                        image.push("latest")
+                        image.push('latest')
                     }
                 }
             }
@@ -44,11 +44,9 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                script {
-                    docker.image('bitnami/kubectl:latest').inside {
-                        sh 'kubectl apply -f k8s/'
-                    }
-                }
+                sh 'kubectl config current-context'
+                sh 'kubectl get nodes'
+                sh 'kubectl apply -f k8s/'
             }
         }
 
