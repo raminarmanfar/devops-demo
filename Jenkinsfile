@@ -16,6 +16,14 @@ pipeline {
             }
         }
 
+        stage('Build Backend Image') {
+            steps {
+                script {
+                    docker.build("demo-backend:latest", "./demo-backend")
+                }
+            }
+        }
+
         stage('Build Frontend') {
             steps {
                 dir('demo-frontend') {
