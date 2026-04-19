@@ -16,10 +16,14 @@ pipeline {
             }
         }
 
-        stage('Build Backend Image') {
+        stage('Build & Push Backend Image') {
             steps {
                 script {
-                    docker.build("demo-backend:latest", "./demo-backend")
+                    def image = docker.build('raminarmanfar/demo-backend:latest', './demo-backend')
+
+                    docker.withRegistry('', 'dockerhub') {
+                        image.push()
+                    }
                 }
             }
         }
