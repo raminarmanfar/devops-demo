@@ -4,7 +4,6 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                echo 'Checking out code...'
                 checkout scm
             }
         }
@@ -20,8 +19,12 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 dir('demo-frontend') {
-                    sh 'npm install'
-                    sh 'npm run build'
+                    script {
+                        docker.image('node:20').inside {
+                            sh 'npm install'
+                            sh 'npm run build'
+                        }
+                    }
                 }
             }
         }
