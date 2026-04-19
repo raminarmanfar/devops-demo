@@ -20,7 +20,11 @@ Thumbs.db
 
 # Java / Maven
 demo-backend/target/
-demo-backend/.mvn/
+demo-backend/.mvn/*
+!demo-backend/.mvn/wrapper/
+!demo-backend/.mvn/wrapper/maven-wrapper.properties
+!demo-backend/.mvn/wrapper/maven-wrapper.jar
+
 *.class
 
 # Node / Angular
