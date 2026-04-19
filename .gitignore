@@ -1,0 +1,36 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Logs
+*.log
+
+# Environment / secrets
+.env
+.env.*
+*.pem
+*.key
+*.crt
+*.p12
+*.jks
+
+# Java / Maven
+demo-backend/target/
+demo-backend/.mvn/
+*.class
+
+# Node / Angular
+demo-frontend/node_modules/
+demo-frontend/dist/
+demo-frontend/.angular/
+demo-frontend/coverage/
+
+# Jenkins local data
+jenkins/.env
+
+# Misc
+tmp/
