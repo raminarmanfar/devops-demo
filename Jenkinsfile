@@ -19,10 +19,11 @@ pipeline {
         stage('Build & Push Backend Image') {
             steps {
                 script {
-                    def image = docker.build('raminarmanfar/demo-backend:latest', './demo-backend')
-
+                    def image = docker.build("raminarmanfar/demo-backend:${env.BUILD_NUMBER}", "./demo-backend")
+                    
                     docker.withRegistry('', 'dockerhub') {
-                        image.push()
+                        image.push("${env.BUILD_NUMBER}")
+                        image.push("latest")
                     }
                 }
             }
