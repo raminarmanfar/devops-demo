@@ -20,7 +20,7 @@ pipeline {
             steps {
                 script {
                     def image = docker.build("raminarmanfar/demo-backend:${env.BUILD_NUMBER}", "./demo-backend")
-                    
+
                     docker.withRegistry('', 'dockerhub') {
                         image.push("${env.BUILD_NUMBER}")
                         image.push("latest")
@@ -37,6 +37,16 @@ pipeline {
                             sh 'npm install'
                             sh 'npm run build'
                         }
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    docker.image('bitnami/kubectl:latest').inside {
+                        sh 'kubectl apply -f k8s/'
                     }
                 }
             }
