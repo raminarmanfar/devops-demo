@@ -47,6 +47,8 @@ pipeline {
                 sh 'kubectl config current-context'
                 sh 'kubectl get nodes'
                 sh 'kubectl apply -f k8s/'
+                sh "kubectl set image deployment/backend backend=raminarmanfar/demo-backend:${env.BUILD_NUMBER}"
+                sh 'kubectl rollout status deployment/backend'
             }
         }
 
