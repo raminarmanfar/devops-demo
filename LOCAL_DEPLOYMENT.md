@@ -110,6 +110,21 @@ Pipeline behavior now:
 3. Save webhook and push a small commit.
 4. Jenkins should auto-start the pipeline.
 
+### Fully local auto-trigger (no public Jenkins URL required)
+
+If Jenkins is running only on localhost, GitHub webhook cannot reach it directly.
+Your Jenkinsfile now includes Poll SCM every 2 minutes, so builds still auto-trigger after each push.
+
+In Jenkins job config:
+1. Enable `GitHub hook trigger for GITScm polling` (for webhook use).
+2. Enable `Poll SCM` with schedule:
+
+```text
+H/2 * * * *
+```
+
+This gives you local automatic pipeline runs without exposing Jenkins.
+
 ### Change-based stage execution
 
 Pipeline stages now auto-skip unless related files changed:
