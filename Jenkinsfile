@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        DOCKERHUB_USERNAME = credentials('dockerhub-username')
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub')
     }
 
     stages {
@@ -27,11 +27,11 @@ pipeline {
         stage('Build & Push Backend Image') {
             steps {
                 script {
-                    if (!env.DOCKERHUB_USERNAME?.trim()) {
-                        error('Missing Docker Hub username. Add Jenkins secret text credential with id dockerhub-username.')
+                    if (!env.DOCKERHUB_CREDENTIALS_USR?.trim()) {
+                        error('Missing Docker Hub username. Check Jenkins credential id dockerhub is Username with password.')
                     }
 
-                    def backendImage = "${env.DOCKERHUB_USERNAME}/demo-backend"
+                    def backendImage = "${env.DOCKERHUB_CREDENTIALS_USR}/demo-backend"
                     def image = docker.build("${backendImage}:${env.BUILD_NUMBER}", "./demo-backend")
 
                     docker.withRegistry('', 'dockerhub') {
@@ -45,11 +45,11 @@ pipeline {
         stage('Build & Push Frontend Image') {
             steps {
                 script {
-                    if (!env.DOCKERHUB_USERNAME?.trim()) {
-                        error('Missing Docker Hub username. Add Jenkins secret text credential with id dockerhub-username.')
+                    if (!env.DOCKERHUB_CREDENTIALS_USR?.trim()) {
+                        error('Missing Docker Hub username. Check Jenkins credential id dockerhub is Username with password.')
                     }
 
-                    def frontendImage = "${env.DOCKERHUB_USERNAME}/demo-frontend"
+                    def frontendImage = "${env.DOCKERHUB_CREDENTIALS_USR}/demo-frontend"
                     def image = docker.build("${frontendImage}:${env.BUILD_NUMBER}", "./demo-frontend")
 
                     docker.withRegistry('', 'dockerhub') {
@@ -68,8 +68,8 @@ pipeline {
                 sh 'kubectl config current-context'
                 sh 'kubectl get nodes'
                 sh 'kubectl apply -f k8s/'
-                sh "kubectl set image deployment/backend backend=${env.DOCKERHUB_USERNAME}/demo-backend:${env.BUILD_NUMBER}"
-                sh "kubectl set image deployment/frontend frontend=${env.DOCKERHUB_USERNAME}/demo-frontend:${env.BUILD_NUMBER}"
+                sh "kubectl set image deployment/backend backend=${env.DOCKERHUB_CREDENTIALS_USR}/demo-backend:${env.BUILD_NUMBER}"
+                sh "kubectl set image deployment/frontend frontend=${env.DOCKERHUB_CREDENTIALS_USR}/demo-frontend:${env.BUILD_NUMBER}"
                 sh 'kubectl rollout status deployment/backend'
                 sh 'kubectl rollout status deployment/frontend'
             }

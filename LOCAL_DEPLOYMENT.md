@@ -11,7 +11,6 @@ This guide runs the project locally with Jenkins, Docker, Kubernetes (kind), Git
 - A GitHub repo for this project
 - Docker Hub account
 - Jenkins credential id dockerhub (Username with password for Docker Hub login)
-- Jenkins credential id dockerhub-username (Secret text containing only your Docker Hub username)
 
 ## 2) Push this project to GitHub
 
@@ -85,7 +84,6 @@ Create a Pipeline job and point it to your GitHub repo using `Jenkinsfile`.
 
 Required Jenkins setup:
 - Docker Hub credential id must be dockerhub
-- Docker Hub username secret text credential id must be dockerhub-username
 - Jenkins runtime must have Docker socket access and kubeconfig access
 
 Run the pipeline.
