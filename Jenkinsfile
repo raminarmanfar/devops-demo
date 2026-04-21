@@ -45,8 +45,12 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 dir('demo-frontend') {
-                    sh 'npm ci'
-                    sh 'npm run build'
+                    script {
+                        docker.image('node:24-alpine').inside {
+                            sh 'npm ci'
+                            sh 'npm run build'
+                        }
+                    }
                 }
             }
         }
