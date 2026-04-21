@@ -42,7 +42,16 @@ pipeline {
             }
         }
 
-        stage('Build & Push Frontend Image') {
+        stage('Build Frontend') {
+            steps {
+                dir('demo-frontend') {
+                    sh 'npm ci'
+                    sh 'npm run build'
+                }
+            }
+        }
+
+        stage('Push Frontend Image') {
             steps {
                 script {
                     if (!env.DOCKERHUB_CREDENTIALS_USR?.trim()) {
