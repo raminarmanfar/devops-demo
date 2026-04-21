@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: devops-demo-backend:1.0
-          imagePullPolicy: IfNotPresent
+          image: raminarmanfar/demo-backend:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080

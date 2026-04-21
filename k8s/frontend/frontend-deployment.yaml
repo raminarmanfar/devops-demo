@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: devops-demo-frontend:1.0
-          imagePullPolicy: IfNotPresent
+          image: raminarmanfar/demo-frontend:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
