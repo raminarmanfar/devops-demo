@@ -93,12 +93,29 @@ After verifying image push, run again with DEPLOY_TO_K8S checked to deploy to Ku
 
 Pipeline behavior now:
 - Builds backend image and pushes:
-  - `raminarmanfar/demo-backend:<BUILD_NUMBER>`
-  - `raminarmanfar/demo-backend:latest`
+  - `<dockerhub-username>/demo-backend:<BUILD_NUMBER>`
+  - `<dockerhub-username>/demo-backend:latest`
 - Builds frontend image and pushes:
-  - `raminarmanfar/demo-frontend:<BUILD_NUMBER>`
-  - `raminarmanfar/demo-frontend:latest`
+  - `<dockerhub-username>/demo-frontend:<BUILD_NUMBER>`
+  - `<dockerhub-username>/demo-frontend:latest`
 - Applies Kubernetes manifests and updates deployments to `<BUILD_NUMBER>` image tags
+
+### Automatic Jenkins trigger from GitHub push
+
+1. In Jenkins job configuration, ensure this job uses the GitHub repository URL and credentials.
+2. In GitHub repository settings, open Webhooks and add:
+   - Payload URL: `http://<jenkins-host>:8080/github-webhook/`
+   - Content type: `application/json`
+   - Event: `Just the push event`
+3. Save webhook and push a small commit.
+4. Jenkins should auto-start the pipeline.
+
+### Change-based stage execution
+
+Pipeline stages now auto-skip unless related files changed:
+- Backend stages run when `demo-backend/**` changes.
+- Frontend stages run when `demo-frontend/**` changes.
+- Both also run when `Jenkinsfile` changes.
 
 ## 8) Verify deployment
 
@@ -120,3 +137,18 @@ To make Argo CD the only deploy actor:
 - Let Argo CD auto-sync those Git commits
 
 This is the cleaner production-style GitOps model.
+
+## 10) Jenkins vs Argo CD
+
+- Use Jenkins for CI:
+  - Trigger on GitHub push
+  - Build/test images
+  - Push images to Docker Hub
+- Use Argo CD for CD:
+  - Watch Kubernetes manifests in GitHub
+  - Auto-sync cluster to desired Git state
+
+Recommended production flow:
+1. Jenkins builds and pushes image.
+2. Jenkins updates image tag in Git (manifest or Helm values) and pushes commit.
+3. Argo CD detects the Git change and deploys automatically.

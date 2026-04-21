@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    triggers {
+        githubPush()
+    }
+
     parameters {
         booleanParam(name: 'DEPLOY_TO_K8S', defaultValue: false, description: 'Deploy to Kubernetes after pushing images')
     }
@@ -17,6 +21,12 @@ pipeline {
         }
 
         stage('Build Backend') {
+            when {
+                anyOf {
+                    changeset "demo-backend/**"
+                    changeset "Jenkinsfile"
+                }
+            }
             steps {
                 dir('demo-backend') {
                     sh './mvnw clean package'
@@ -25,6 +35,12 @@ pipeline {
         }
 
         stage('Build & Push Backend Image') {
+            when {
+                anyOf {
+                    changeset "demo-backend/**"
+                    changeset "Jenkinsfile"
+                }
+            }
             steps {
                 script {
                     if (!env.DOCKERHUB_CREDENTIALS_USR?.trim()) {
@@ -43,6 +59,12 @@ pipeline {
         }
 
         stage('Build Frontend') {
+            when {
+                anyOf {
+                    changeset "demo-frontend/**"
+                    changeset "Jenkinsfile"
+                }
+            }
             steps {
                 dir('demo-frontend') {
                     script {
@@ -56,6 +78,12 @@ pipeline {
         }
 
         stage('Push Frontend Image') {
+            when {
+                anyOf {
+                    changeset "demo-frontend/**"
+                    changeset "Jenkinsfile"
+                }
+            }
             steps {
                 script {
                     if (!env.DOCKERHUB_CREDENTIALS_USR?.trim()) {
